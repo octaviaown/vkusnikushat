@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор блюда</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url('https://i.pinimg.com/736x/00/c1/02/00c1021f547d7161b509759cd8591e46.jpg'); /* Ваш фон */
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            color: #fff;
+        }
+        .overlay {
+            background: rgba(0, 0, 0, 0.1);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            min-height: 100vh;
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #f4a261;
+        }
+        .description {
+            font-size: 1rem;
+            color: #fff;
+            margin-bottom: 30px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+        .card {
+            position: relative;
+            border: 2px solid #f4a261;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        .card-content {
+            padding: 15px;
+            text-align: center;
+        }
+        .card-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #f4a261;
+        }
+        .card-description {
+            font-size: 0.9rem;
+            color: #ddd;
+        }
+        .card input[type="radio"] {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .custom-input {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #f4a261;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 400px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        .next-button {
+            margin-top: 30px;
+            padding: 15px 30px;
+            background-color: #f4a261;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .next-button:hover {
+            background-color: #e76f51;
+        }
+        .skip-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background-color: #666;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            width: 80%;
+            max-width: 400px;
+            position: absolute;
+            bottom: 20px;
+        }
+        .skip-button:hover {
+            background-color: #444;
+        }
+        footer {
+            margin-top: 50px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <h1>Выбери полноценное блюдо!</h1>
+        <p class="description">Сегодня на ужин: итальянская классика, национальные блюда или свой вариант? Выбери!</p>
+        <form id="dishForm">
+            <div class="grid">
+                <label class="card">
+                    <img src="https://cdn.vkuso.ru/uploads/pasta-karbonara-s-bekonom-v-slivkax.jpg" alt="Карбонара">
+                    <div class="card-content">
+                        <div class="card-title">Карбонара</div>
+                        <div class="card-description">Кремовая паста с беконом и сыром, как в Италии.</div>
+                    </div>
+                    <input type="radio" name="dish" value="Карбонара">
+                </label>
+                <label class="card">
+                    <img src="data:image/jpeg;base64,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" alt="Феттучини с грибами">
+                    <div class="card-content">
+                        <div class="card-title">Феттучини с грибами</div>
+                        <div class="card-description">Нежная паста с шампиньонами в сливочном соусе.</div>
+                    </div>
+                    <input type="radio" name="dish" value="Феттучини с грибами">
+                </label>
+                <label class="card">
+                    <img src="https://cdn.vkuso.ru/uploads/plov-s-kuricej-gribami-i-ovoshhami-v-mikrovolnovke.jpg" alt="Плов">
+                    <div class="card-content">
+                        <div class="card-title">Плов</div>
+                        <div class="card-description">Пряное восточное блюдо с ароматным рисом.</div>
+                    </div>
+                    <input type="radio" name="dish" value="Плов">
+                </label>
+                <label class="card">
+                    <img src="https://static.1000.menu/img/content-v2/17/21/27110/postnye-draniki-iz-kartoshki_1614782786_14_max.jpg" alt="Драники">
+                    <div class="card-content">
+                        <div class="card-title">Драники</div>
+                        <div class="card-description">Хрустящие картофельные дранники — белорусская классика.</div>
+                    </div>
+                    <input type="radio" name="dish" value="Драники">
+                </label>
+                <label class="card">
+                    <img src="https://menunedeli.ru/wp-content/uploads/2020/04/Kuriniy-sup-za-15-minut-500x350-500x350.jpg" alt="Суп">
+                    <div class="card-content">
+                        <div class="card-title">Суп</div>
+                        <div class="card-description">Лёгкий или сытный, согревающий и полезный.</div>
+                    </div>
+                    <input type="radio" name="dish" value="Суп">
+                </label>
+                <label class="card">
+                    <img src="https://i.pinimg.com/736x/9e/e1/ca/9ee1ca556cba8da840327278c256aab7.jpg" alt="Свой вариант">
+                    <div class="card-content">
+                        <div class="card-title">Свой вариант</div>
+                        <div class="card-description">Добавь своё уникальное блюдо!</div>
+                    </div>
+                    <input type="radio" name="dish" value="Свой вариант" onclick="showCustomInput('dish')">
+                </label>
+            </div>
+            <input type="text" id="custom-dish" class="custom-input" placeholder="Напиши своё блюдо">
+            <button type="button" class="next-button" onclick="confirmSelection()">Готово</button>
+        </form>
+        <button type="button" class="skip-button" onclick="skipSelection()">Я не знаю что конкретно хочу...</button>
+        <footer>&copy; 2024 Онлайн-меню семьи Вагнер</footer>
+    </div>
+
+<script>
+    // Функция для отображения поля "Свой вариант"
+    function showCustomInput(name) {
+        const customInput = document.getElementById(`custom-${name}`);
+        customInput.style.display = 'block';
+    }
+
+    // Функция для подтверждения выбора блюда
+    function confirmSelection() {
+        const params = new URLSearchParams(window.location.search);
+        const date = params.get('date'); // Дата ужина
+        const selectedOption = document.querySelector('input[name="dish"]:checked'); // Выбранное блюдо
+
+        if (!selectedOption) {
+            alert('Пожалуйста, выбери блюдо или пропусти этот шаг.');
+            return;
+        }
+
+        let dish = selectedOption.value;
+
+        // Если выбрано "Свой вариант"
+        if (dish === 'Свой вариант') {
+            const customInput = document.getElementById('custom-dish').value;
+            if (!customInput.trim()) {
+                alert('Пожалуйста, впиши своё блюдо.');
+                return;
+            }
+            dish = customInput.trim();
+        }
+
+        // Переход сразу на десерт, если выбрано главное блюдо
+        window.location.href = `dessert.html?date=${encodeURIComponent(date)}&dish=${encodeURIComponent(dish)}`;
+    }
+
+    // Функция для пропуска выбора блюда
+    function skipSelection() {
+        const params = new URLSearchParams(window.location.search);
+        const date = params.get('date');
+
+        // Переход на выбор гарнира, если главное блюдо пропущено
+        window.location.href = `garnish.html?date=${encodeURIComponent(date)}`;
+    }
+</script>
+
+</body>
+</html>
