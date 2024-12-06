@@ -16,7 +16,7 @@
             text-align: center;
         }
         .overlay {
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.4);
             position: absolute;
             top: 0;
             left: 0;
@@ -28,27 +28,89 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            min-height: 100vh;
-            text-align: center;
+            justify-content: center;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            margin: auto;
+            margin-top: 10%;
             position: relative;
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
         }
-
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 20px;
             color: #f4a261;
+            animation: glow 2s infinite;
+        }
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 0 0 10px #f4a261, 0 0 20px #f4a261, 0 0 30px #f4a261;
+            }
+            50% {
+                text-shadow: 0 0 20px #ff6347, 0 0 30px #ff6347, 0 0 40px #ff6347;
+            }
         }
         p {
             font-size: 1.2rem;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        p span {
+            font-weight: bold;
+            color: #f4a261;
+        }
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 20px;
+            background-color: #f4a261;
+            opacity: 0.7;
+            animation: fall 3s infinite ease-in-out;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="confetti"></div>
     <div class="container">
-        <h1>Ура! Выбор сделан!</h1>
+        <h1>Поздравляем!</h1>
         <p>Дата ужина: <span id="dinner-date"></span></p>
         <p id="dish-container" style="display: none;">Блюдо: <span id="dish"></span></p>
         <p id="garnish-container" style="display: none;">Гарнир: <span id="garnish"></span></p>
@@ -84,6 +146,23 @@
                 document.getElementById('meat').textContent = meat;
             }
         }
+
+        // Создание конфетти
+        function createConfetti() {
+            const confetti = document.querySelector('.confetti');
+            for (let i = 0; i < 100; i++) {
+                const piece = document.createElement('div');
+                piece.classList.add('confetti-piece');
+                piece.style.left = Math.random() * 100 + 'vw';
+                piece.style.animationDelay = Math.random() * 3 + 's';
+                piece.style.backgroundColor =
+                    ['#f4a261', '#e76f51', '#ff9f1c', '#ff6b6b'][Math.floor(Math.random() * 4)];
+                confetti.appendChild(piece);
+            }
+        }
+
+        // Запускаем конфетти
+        createConfetti();
     </script>
 </body>
 </html>
