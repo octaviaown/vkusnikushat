@@ -16,14 +16,14 @@
             text-align: center;
         }
         .overlay {
-            background: rgba(0, 0, 0, 0.4);
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
-        }
+    background: rgba(0, 0, 0, 0.4); /* Увеличено затемнение */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
         .container {
             display: flex;
             flex-direction: column;
@@ -78,6 +78,21 @@
             font-weight: bold;
             color: #f4a261;
         }
+        .qr-section {
+            margin-top: 20px;
+        }
+        .qr-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #f4a261;
+        }
+        .qr-code {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            margin-top: 10px;
+        }
         .confetti {
             position: fixed;
             top: 0;
@@ -116,8 +131,14 @@
         <p id="garnish-container" style="display: none;">Гарнир: <span id="garnish"></span></p>
         <p id="meat-container" style="display: none;">Мясное: <span id="meat"></span></p>
         <p>Десерт: <span id="dessert"></span></p>
+
+        <div class="qr-section">
+            <h2>Поделитесь своим выбором:</h2>
+            <canvas id="qr-code" class="qr-code"></canvas>
+        </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <script>
         // Получение параметров URL
         const params = new URLSearchParams(window.location.search);
@@ -161,8 +182,23 @@
             }
         }
 
-        // Запускаем конфетти
+        // Генерация QR-кода
+        function generateQRCode() {
+            const qrCodeCanvas = document.getElementById('qr-code');
+            const qrContent = window.location.href;
+            QRCode.toCanvas(qrCodeCanvas, qrContent, {
+                width: 150,
+                margin: 2,
+                color: {
+                    dark: '#FFD8A8',
+                    light: '#00000000'
+                }
+            });
+        }
+
+        // Запускаем конфетти и QR-код
         createConfetti();
+        generateQRCode();
     </script>
 </body>
 </html>
