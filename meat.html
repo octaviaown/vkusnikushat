@@ -8,20 +8,11 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-image: url('https://i.pinimg.com/736x/92/05/d4/9205d490f26176b12c51ea9feef3136e.jpg'); /* Ваш фон */
+            background-image: url('https://i.pinimg.com/736x/92/05/d4/9205d490f26176b12c51ea9feef3136e.jpg');
             background-size: cover;
             background-position: center;
             margin: 0;
             color: #fff;
-        }
-        .overlay {
-            background: rgba(0, 0, 0, 0.1);
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
         }
         .container {
             display: flex;
@@ -55,13 +46,8 @@
             border: 2px solid #f4a261;
             border-radius: 10px;
             overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
             background: rgba(255, 255, 255, 0.1);
-        }
-        .card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
         }
         .card img {
             width: 100%;
@@ -77,18 +63,6 @@
             font-size: 1.2rem;
             margin-bottom: 10px;
             color: #f4a261;
-        }
-        .card-description {
-            font-size: 0.9rem;
-            color: #ddd;
-        }
-        .card input[type="radio"] {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
         }
         .custom-input {
             display: none;
@@ -116,15 +90,9 @@
         .next-button:hover {
             background-color: #e76f51;
         }
-        footer {
-            margin-top: 50px;
-            font-size: 0.9rem;
-            color: #aaa;
-        }
     </style>
 </head>
 <body>
-    <div class="overlay"></div>
     <div class="container">
         <h1>Выбери мясное!</h1>
         <p class="description">Что на ужин? Выбери мясо, рыбу или добавь свой вариант!</p>
@@ -134,7 +102,6 @@
                     <img src="https://static.1000.menu/img/content-v2/6b/86/36218/kurinoe-file-kusochkami-na-skovorode_1688129410_3_max.jpg" alt="Курица жареная">
                     <div class="card-content">
                         <div class="card-title">Курица жареная</div>
-                        <div class="card-description">С хрустящей корочкой, просто сказка!</div>
                     </div>
                     <input type="radio" name="meat" value="Курица жареная">
                 </label>
@@ -142,7 +109,6 @@
                     <img src="https://lifehacker.ru/wp-content/uploads/2019/12/Depositphotos_84468026_xl-2015_1576059018-e1576059104100-scaled.jpg" alt="Курица запеченная">
                     <div class="card-content">
                         <div class="card-title">Курица запеченная</div>
-                        <div class="card-description">Сочно, вкусно и полезно.</div>
                     </div>
                     <input type="radio" name="meat" value="Курица запеченная">
                 </label>
@@ -150,7 +116,6 @@
                     <img src="https://img.iamcook.ru/old/upl/recipes/cat/u-f777f2a9cd9399a361f5cb25b4d58790.jpg" alt="Котлеты куринные">
                     <div class="card-content">
                         <div class="card-title">Котлеты куринные</div>
-                        <div class="card-description">Мягкие, ароматные и домашние.</div>
                     </div>
                     <input type="radio" name="meat" value="Котлеты куринные">
                 </label>
@@ -158,7 +123,6 @@
                     <img src="https://img.povar.ru/mobile/cd/fd/6a/99/bistrii_jarenii_losos-493265.jpg" alt="Лосось">
                     <div class="card-content">
                         <div class="card-title">Лосось</div>
-                        <div class="card-description">Изысканный выбор для любителей рыбы.</div>
                     </div>
                     <input type="radio" name="meat" value="Лосось">
                 </label>
@@ -166,7 +130,6 @@
                     <img src="https://i.pinimg.com/736x/13/ef/02/13ef027261b92fba1b4493f0d3f1e7f2.jpg" alt="Свой вариант">
                     <div class="card-content">
                         <div class="card-title">Свой вариант</div>
-                        <div class="card-description">Добавь свою кулинарную находку!</div>
                     </div>
                     <input type="radio" name="meat" value="Свой вариант" onclick="showCustomInput('meat')">
                 </label>
@@ -178,11 +141,13 @@
     </div>
 
     <script>
+        // Функция для отображения поля "Свой вариант"
         function showCustomInput(name) {
             const customInput = document.getElementById(`custom-${name}`);
             customInput.style.display = 'block';
         }
 
+        // Функция для подтверждения выбора
         function confirmSelection() {
             const params = new URLSearchParams(window.location.search);
             const date = params.get('date');
@@ -205,17 +170,8 @@
                 meat = customInput.trim();
             }
 
-            window.location.href = `dish.html?date=${encodeURIComponent(date)}&garnish=${encodeURIComponent(garnish)}&meat=${encodeURIComponent(meat)}`;
-}
-
-    // Функция для пропуска выбора блюда
-    function skipSelection() {
-        const params = new URLSearchParams(window.location.search);
-        const date = params.get('date');
-
-        // Переход на выбор гарнира, если главное блюдо пропущено
-        window.location.href = `dessert.html?date=${encodeURIComponent(date)}`;
-
+            window.location.href = `dessert.html?date=${encodeURIComponent(date)}&garnish=${encodeURIComponent(garnish)}&meat=${encodeURIComponent(meat)}`;
+        }
     </script>
 </body>
 </html>
