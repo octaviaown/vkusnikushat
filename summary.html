@@ -1,6 +1,14 @@
-<!DOCTYPE html>
+Привет, твой заказ был принят!
+
+Дата ужина: {{dinner_date}}
+Блюдо: {{dish}}
+Гарнир: {{garnish}}
+Мясное: {{meat}}
+Десерт: {{dessert}}<!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Итоговый выбор</title>
@@ -16,14 +24,14 @@
             text-align: center;
         }
         .overlay {
-    background: rgba(0, 0, 0, 0.4); /* Увеличено затемнение */
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
-}
+            background: rgba(0, 0, 0, 0.4);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
         .container {
             display: flex;
             flex-direction: column;
@@ -120,6 +128,19 @@
                 opacity: 0;
             }
         }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #f4a261;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #e76f51;
+        }
     </style>
 </head>
 <body>
@@ -136,10 +157,14 @@
             <h2>Поделись своим выбором:</h2>
             <canvas id="qr-code" class="qr-code"></canvas>
         </div>
+
+        <button id="send-email">Отправить на почту</button>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <script>
+        // Инициализация EmailJS
+        emailjs.init('TDePhu-Hoz_EnXfku');
+
         // Получение параметров URL
         const params = new URLSearchParams(window.location.search);
         const date = params.get('date');
@@ -148,16 +173,14 @@
         const meat = params.get('meat');
         const dessert = params.get('dessert');
 
-        // Устанавливаем дату и десерт (всегда отображаются)
+        // Устанавливаем значения на странице
         document.getElementById('dinner-date').textContent = date || 'Не выбрано';
         document.getElementById('dessert').textContent = dessert || 'Не выбрано';
 
-        // Проверка на наличие блюда
         if (dish && dish.trim() !== '') {
             document.getElementById('dish-container').style.display = 'block';
             document.getElementById('dish').textContent = dish;
         } else {
-            // Если блюда нет, показываем гарнир и мясное
             if (garnish && garnish.trim() !== '') {
                 document.getElementById('garnish-container').style.display = 'block';
                 document.getElementById('garnish').textContent = garnish;
@@ -167,6 +190,39 @@
                 document.getElementById('meat').textContent = meat;
             }
         }
+
+        // Генерация QR-кода
+        const qrCodeCanvas = document.getElementById('qr-code');
+        const qrContent = `Дата ужина: ${date}\nБлюдо: ${dish || 'Не выбрано'}\nГарнир: ${garnish || 'Не выбрано'}\nМясное: ${meat || 'Не выбрано'}\nДесерт: ${dessert || 'Не выбрано'}`;
+        QRCode.toCanvas(qrCodeCanvas, qrContent, {
+            width: 150,
+            margin: 2,
+            color: {
+                dark: '#FFD8A8',
+                light: '#00000000'
+            }
+        });
+
+        // Обработчик отправки на почту
+        document.getElementById('send-email').addEventListener('click', function () {
+            const templateParams = {
+                to_email: 'polina.sitsko03@mail.ru',
+                dinner_date: date || 'Не выбрано',
+                dish: dish || 'Не выбрано',
+                garnish: garnish || 'Не выбрано',
+                meat: meat || 'Не выбрано',
+                dessert: dessert || 'Не выбрано'
+            };
+
+            emailjs.send('service_kzaib7b', 'template_8epyais', templateParams)
+                .then((response) => {
+                    alert('Ваш выбор успешно отправлен на почту!');
+                })
+                .catch((error) => {
+                    console.error('Ошибка при отправке:', error);
+                    alert('Произошла ошибка при отправке на почту.');
+                });
+        });
 
         // Создание конфетти
         function createConfetti() {
@@ -182,23 +238,7 @@
             }
         }
 
-        // Генерация QR-кода
-        function generateQRCode() {
-            const qrCodeCanvas = document.getElementById('qr-code');
-            const qrContent = window.location.href;
-            QRCode.toCanvas(qrCodeCanvas, qrContent, {
-                width: 150,
-                margin: 2,
-                color: {
-                    dark: '#FFD8A8',
-                    light: '#00000000'
-                }
-            });
-        }
-
-        // Запускаем конфетти и QR-код
         createConfetti();
-        generateQRCode();
     </script>
 </body>
 </html>
