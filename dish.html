@@ -234,7 +234,7 @@
             dish = customInput.trim();
         }
 
-        // Переход сразу на десерт, если выбрано главное блюдо
+        // Переход на десерт
         window.location.href = `dessert.html?date=${encodeURIComponent(date)}&dish=${encodeURIComponent(dish)}`;
     }
 
@@ -243,7 +243,7 @@
         const params = new URLSearchParams(window.location.search);
         const date = params.get('date');
 
-        // Переход на выбор гарнира, если главное блюдо пропущено
+        // Переход на выбор гарнира
         window.location.href = `garnish.html?date=${encodeURIComponent(date)}`;
     }
 </script>
