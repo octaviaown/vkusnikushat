@@ -14,9 +14,10 @@
             margin: 0;
             color: #fff;
             text-align: center;
+            overflow: hidden;
         }
         .overlay {
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.5);
             position: absolute;
             top: 0;
             left: 0;
@@ -28,6 +29,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             padding: 20px;
             background: rgba(0, 0, 0, 0.7);
             min-height: 100vh;
@@ -36,9 +38,16 @@
         }
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 20px;
             color: #f4a261;
+            text-shadow: 2px 2px 5px #000;
+        }
+        .intro-text {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+            line-height: 1.6;
         }
         .date-selector {
             font-size: 1.2rem;
@@ -55,9 +64,31 @@
             text-align: center;
             cursor: pointer;
             max-width: 250px;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        .date-input:hover {
+            box-shadow: 0 0 15px #f4a261;
+            transform: scale(1.05);
         }
         .date-input::-webkit-calendar-picker-indicator {
             filter: invert(1);
+        }
+        .question-marks {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            50% {
+                transform: translate(-50%, -55%) rotate(15deg);
+            }
         }
         .next-button {
             margin-top: 20px;
@@ -68,16 +99,25 @@
             border-radius: 5px;
             font-size: 18px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
         .next-button:hover {
             background-color: #e76f51;
+            transform: scale(1.1);
         }
     </style>
 </head>
 <body>
+    <div class="overlay"></div>
+    <div class="question-marks">❓❓❓</div>
     <div class="container">
         <h1>Собери свой ужин!</h1>
+         <div class="intro-text">
+            <p>Этот сайт поможет составить идеальный ужин на любую дату.</p>
+        Ты сможешь выбрать уже готовое блюдо или составить своё собственное, выбрав гарнир и мясное на свой вкус!</p>
+            <p>Просто следуй пошаговым инструкциям и делай свой выбор.</p>
+        <>
+        <p class="small-note">Я приготовлю всё что захочешь <3 </p>
         <p class="date-selector">Выберите дату ужина:</p>
         <input type="text" id="dinner-date" class="date-input" placeholder="Выберите день и месяц" onfocus="(this.type='date')" required>
         <button class="next-button" onclick="goToDish()">Начать</button>
@@ -87,7 +127,7 @@
         function goToDish() {
             const date = document.getElementById('dinner-date').value;
             if (!date) {
-                alert('Пожалуйста, выберите дату.');
+                alert('Пожалуйста, выбери дату.');
                 return;
             }
 
