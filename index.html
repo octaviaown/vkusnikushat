@@ -80,22 +80,23 @@
         <h1>Собери свой ужин!</h1>
         <p class="date-selector">Выберите дату ужина:</p>
         <input type="text" id="dinner-date" class="date-input" placeholder="Выберите день и месяц" onfocus="(this.type='date')" required>
-        <button class="next-button" onclick="goToGarnish()">Начать</button>
+        <button class="next-button" onclick="goToDish()">Начать</button>
     </div>
 
     <script>
-        function goToGarnish() {
+        function goToDish() {
             const date = document.getElementById('dinner-date').value;
             if (!date) {
                 alert('Пожалуйста, выберите дату.');
                 return;
             }
 
-            // Убираем год из даты
+            // Форматируем дату (убираем год)
             const [year, month, day] = date.split('-');
             const formattedDate = `${day}-${month}`;
 
-            window.location.href = `pages/garnish.html?date=${encodeURIComponent(formattedDate)}`;
+            // Перенаправляем на страницу dish.html
+            window.location.href = `dish.html?date=${encodeURIComponent(formattedDate)}`;
         }
     </script>
 </body>
